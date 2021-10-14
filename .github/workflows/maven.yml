@@ -31,7 +31,17 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml', '**/*.yml') }}
           restore-keys: ${{ runner.os }}-m2-
-      - name: Build with Maven
-        run: mvn -f myproject/pom.xml clean verify
-   
-   
+      - name: Build with maven
+        run: mvn -f myproject/pom.xml clean verify      
+      - name: Generate JUnit Report
+        run: >
+          mvn -f myproject/pom.xml
+          surefire-report:report-only site:site -DgenerateReports=false
+        if: ${{ failure() }}  
+      - name: Archive JUnit Report
+        uses: actions/upload-artifact@v2
+        if: ${{ failure() }}  
+        with:
+          name: surefire-report-jdk-${{matrix.java}}
+          path: '**/target/site'
+        
