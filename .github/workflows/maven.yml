@@ -17,8 +17,7 @@ jobs:
               additional-maven-args:  > 
                -Pcoveralls
                -DrepoToken=$COVERALLS_REPO_TOKEN 
-               -DpullRequest=${{github.event.pull_request.number}}
-               coveralls:report
+               -DpullRequest=${{github.event.pull_request.number}}               
             - java: 11  
       name: Build with Java ${{ matrix.java}} 
       steps:
